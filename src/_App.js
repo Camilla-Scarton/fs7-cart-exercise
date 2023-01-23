@@ -1,6 +1,6 @@
 import { Component } from "react"
-import CartItem from "./CartItem";
-import Product from "./Product";
+import CartItem from "./_CartItem";
+import Product from "./_Product";
 
 class App extends Component {
 
