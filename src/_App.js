@@ -2,6 +2,18 @@ import { Component } from "react"
 import CartItem from "./_CartItem";
 import Product from "./_Product";
 
+const vouchers = [
+  {
+    name: "20-PR",
+    type: 0, // % 
+    value: 20
+  },
+  {
+    name: "50-AM",
+    type: 1, // valore
+    value: 50
+  }
+];
 class App extends Component {
 
   state = {
@@ -21,6 +33,10 @@ class App extends Component {
       price: 4,
     }],
     cart: [],
+    form: {
+      code: "" 
+    },
+    activeCode: null
   }
 
   onAddToCart = (id) => {
@@ -52,6 +68,43 @@ class App extends Component {
     })
   }
 
+  handleInput = (event) => {
+    const {value, name} = event.target;
+    this.setState({
+      form: {
+        ...this.state.form, 
+        [name]: value
+      }
+    })
+  }
+  
+  handleAddCode = () =>  {
+    if (this.state.form.code == ""){
+      alert("Devi inserire un codice!")
+      return ;
+    }
+    const code = vouchers.find(code => code.name == this.state.form.code)
+    if (!code){
+      alert("codice non valido!")
+      this.setState({
+        form: {
+          ...this.state.form,
+          code: ""
+        }
+      })
+      return ;
+    }else{
+      this.setState({
+        form: {
+          ...this.state.form,
+          code: ""        
+        },
+        activeCode: code
+      })
+    }
+  }
+  
+
   render() {
     return (
       <div>
@@ -74,6 +127,20 @@ class App extends Component {
                   return prev + (curr.price * curr.qnt);
                 }, 0
               )
+            }
+          </div>
+        </div>
+        <div>
+          <h2>Codici sconto</h2>
+          <div>
+            <input name="code" value={this.state.form.code} onInput={this.handleInput} type="text" placeholder="codice"/>
+            <button onClick={this.handleAddCode}>Applica</button>
+          </div>
+          <div>
+            <p>{this.state.activeCode?.name}</p>
+            {
+              this.state.activeCode &&
+              <button>Rimuovi codice</button>
             }
           </div>
         </div>
