@@ -104,6 +104,30 @@ class App extends Component {
     }
   }
   
+  calculateTotal = () => {
+    const totalPrice = this.state.cart.reduce(
+      (prev, curr) => {
+        return prev + (curr.price * curr.qnt);
+      }, 0
+    );
+
+    if (!this.state.activeCode) {
+      return totalPrice;
+    }
+    else {
+      const {type, value} = this.state.activeCode;
+      if (type == 0) {
+        return totalPrice - (totalPrice * value/100);
+      } else if(type == 1) {
+        return totalPrice - value <0 ? 0 : totalPrice - value;
+      }
+    }
+    
+  }
+
+  removeCode = () => {
+    this.setState({activeCode: null}) 
+  }
 
   render() {
     return (
@@ -122,11 +146,9 @@ class App extends Component {
           </div>
           <div>
             {
-              this.state.cart.reduce(
-                (prev, curr) => {
-                  return prev + (curr.price * curr.qnt);
-                }, 0
-              )
+              this.calculateTotal()
+      
+
             }
           </div>
         </div>
@@ -140,7 +162,7 @@ class App extends Component {
             <p>{this.state.activeCode?.name}</p>
             {
               this.state.activeCode &&
-              <button>Rimuovi codice</button>
+              <button onClick={this.removeCode}>Rimuovi codice</button>
             }
           </div>
         </div>
