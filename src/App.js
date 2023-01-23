@@ -22,15 +22,26 @@ const App = () => {
 
     const onAddToCart = (id) => {
         const product = products.find((product) => product.id === id)
-        setCart([
-            ...cart,
-            product
-        ])
+        const itemIndex = cart.findIndex((item) => item.id === id);
+        const _cart = [...cart];
+        if (itemIndex === -1) {
+            product.qnt = 1;
+            _cart.push(product);
+        } else {
+            _cart[itemIndex].qnt += 1;
+        }
+        setCart(_cart);
     }
 
     const removeFromCart = (id) => {
-        const _cart = cart.filter(element => element.id !== id)
-        setCart(_cart)
+        const itemIndex = cart.findIndex(item => item.id === id);
+        let _cart = [...cart];
+        if (cart[itemIndex].qnt === 1) {
+           _cart = [...cart].filter(item => item.id !== id);
+        } else {
+            _cart[itemIndex].qnt -= 1;
+        }
+        setCart(_cart);
     }
 
     return (
